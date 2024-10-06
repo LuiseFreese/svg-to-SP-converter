@@ -14,24 +14,23 @@ document.getElementById('convertBtn').addEventListener('click', function () {
     // Find all <path> elements in the SVG
     const paths = xmlDoc.querySelectorAll('path');
 
-    // Check if the SVG already has a viewBox attribute
+    // Get the viewBox and scale it down by 25%
     let viewBox = xmlDoc.documentElement.getAttribute("viewBox");
-    
-    if (!viewBox) {
-        // Calculate the viewBox if it's missing
-        const svgElement = xmlDoc.documentElement;
-        const svgNamespace = "http://www.w3.org/2000/svg";
-        const tempSvg = document.createElementNS(svgNamespace, "svg");
+    if (viewBox) {
+        let viewBoxValues = viewBox.split(' ').map(Number);
+        // Scale the width and height by 25%
+        viewBoxValues = viewBoxValues.map((val, index) => (index >= 2 ? val * 0.75 : val));
+        viewBox = viewBoxValues.join(' ');
+    }
 
-        paths.forEach(path => {
-            tempSvg.appendChild(path.cloneNode(true));
+    // Scale each path's "d" attribute by 25%
+    const scaleFactor = 0.75;
+
+    function scalePathData(pathData) {
+        // Regular expression to match numbers in the path data
+        return pathData.replace(/-?\d*\.?\d+/g, function (num) {
+            return parseFloat(num) * scaleFactor;
         });
-
-        document.body.appendChild(tempSvg);
-        const bbox = tempSvg.getBBox();
-        document.body.removeChild(tempSvg);
-
-        viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`;
     }
 
     // Build the JSON structure for SharePoint column formatting
@@ -55,10 +54,11 @@ document.getElementById('convertBtn').addEventListener('click', function () {
 
     // Process each <path> element and add it to the JSON structure
     paths.forEach(path => {
+        const scaledPathData = scalePathData(path.getAttribute('d'));
         const pathObj = {
             "elmType": "path",
             "attributes": {
-                "d": path.getAttribute('d')
+                "d": scaledPathData
             },
             "style": {
                 "fill": path.getAttribute('fill') || "#000000" // Default to black if no fill is provided
