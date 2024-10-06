@@ -18,7 +18,7 @@ An input field is provided for users to paste their SVG code. A button labeled *
 
 #### v0.0.2
 
-Users can now paste an SVG image and will see the dropzone to be highlighted. 
+Users can now paste an SVG image and will see the dropzone to be highlighted.
 
 ### Error Handling for Embedded PNGs
 
