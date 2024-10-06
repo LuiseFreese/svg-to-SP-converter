@@ -3,7 +3,6 @@ document.getElementById("convertBtn").addEventListener("click", function () {
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svgInput, "image/svg+xml");
 
-    // Function to convert an SVG element to the desired JSON format
     function convertToJSON(element) {
         let jsonElement = {
             elmType: element.tagName.toLowerCase(),
@@ -11,12 +10,10 @@ document.getElementById("convertBtn").addEventListener("click", function () {
             style: {}
         };
 
-        // Add attributes if they exist
         Array.from(element.attributes).forEach(attr => {
             jsonElement.attributes[attr.name] = attr.value;
         });
 
-        // Add styles if they exist
         const style = element.getAttribute("style");
         if (style) {
             style.split(";").forEach(rule => {
@@ -27,7 +24,6 @@ document.getElementById("convertBtn").addEventListener("click", function () {
             });
         }
 
-        // Remove empty attributes and style objects
         if (Object.keys(jsonElement.attributes).length === 0) {
             delete jsonElement.attributes;
         }
@@ -39,22 +35,38 @@ document.getElementById("convertBtn").addEventListener("click", function () {
         return jsonElement;
     }
 
-    // Function to recursively convert all SVG children
     function convertSVG(svgElement) {
         let jsonElements = [];
         Array.from(svgElement.children).forEach(child => {
             const jsonElement = convertToJSON(child);
-            if (jsonElement) {
+            if (jsonElement.elmType === 'path') {  // Only keep 'path' elements
                 jsonElements.push(jsonElement);
             }
         });
         return jsonElements;
     }
 
-    const jsonOutput = convertSVG(svgDoc.documentElement);
+    // Start building the final JSON output
+    const finalJSON = {
+        "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
+        "elmType": "div",
+        "children": [
+            {
+                "elmType": "span",
+                "txtContent": "@currentField"
+            },
+            {
+                "elmType": "svg",
+                "attributes": {
+                    "viewBox": svgDoc.documentElement.getAttribute('viewBox')
+                },
+                "children": convertSVG(svgDoc.documentElement) // Converted 'path' children
+            }
+        ]
+    };
 
-    // Download the JSON as a file
-    const jsonBlob = new Blob([JSON.stringify(jsonOutput, null, 2)], { type: "application/json" });
+    // Create and download the JSON file
+    const jsonBlob = new Blob([JSON.stringify(finalJSON, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(jsonBlob);
     const a = document.createElement("a");
     a.href = url;
