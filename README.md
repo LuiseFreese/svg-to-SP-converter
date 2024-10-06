@@ -16,6 +16,10 @@ The core functionality of the tool is to take user-pasted SVG code and convert i
 
 An input field is provided for users to paste their SVG code. A button labeled **Convert to JSON** triggers the conversion of SVG to JSON. Once selected, the download of the resulting JSON file starts immediately and the input field is automatically cleared to reset the interface for the next conversion.
 
+#### v0.0.2
+
+Users can now paste an SVG image and will see the dropzone to be highlighted. 
+
 ### Error Handling for Embedded PNGs
 
 The tool detects SVG code that includes embedded PNG images via base64 encoding `xlink:href="data:image/png;base64..."`. If such an embedded PNG is detected, the tool rejects the input and alerts the user that it cannot handle such images for conversion into JSON paths.
