@@ -1,56 +1,68 @@
-document.getElementById('convertBtn').addEventListener('click', () => {
-    const svgInput = document.getElementById('svgInput').value;
-
-    if (!svgInput) {
-        alert('Please paste SVG code before converting.');
-        return;
-    }
-
-    const jsonOutput = convertSvgToJson(svgInput);
-    downloadJson(JSON.stringify(jsonOutput, null, 2));  // Trigger download
-});
-
-function convertSvgToJson(svg) {
+document.getElementById("convertBtn").addEventListener("click", function () {
+    const svgInput = document.getElementById("svgInput").value;
     const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(svg, 'image/svg+xml');
-    const elementsArray = Array.from(svgDoc.documentElement.children).map(svgElementToJson);
-    return elementsArray; // Return the array of elements
-}
+    const svgDoc = parser.parseFromString(svgInput, "image/svg+xml");
 
-function svgElementToJson(element) {
-    const obj = {
-        elmType: element.nodeName,  // Set the element type (e.g., "path", "rect")
-        attributes: {},
-        style: {}
-    };
+    // Function to convert an SVG element to the desired JSON format
+    function convertToJSON(element) {
+        let jsonElement = {
+            elmType: element.tagName.toLowerCase(),
+            attributes: {},
+            style: {}
+        };
 
-    // Extract attributes into the 'attributes' property
-    for (let attr of element.attributes) {
-        if (attr.name === 'style') {
-            // If the element has inline styles, extract those into the 'style' object
-            const styleRules = attr.value.split(';');
-            styleRules.forEach(rule => {
-                const [property, value] = rule.split(':');
-                if (property && value) {
-                    obj.style[property.trim()] = value.trim();
+        // Add attributes if they exist
+        Array.from(element.attributes).forEach(attr => {
+            jsonElement.attributes[attr.name] = attr.value;
+        });
+
+        // Add styles if they exist
+        const style = element.getAttribute("style");
+        if (style) {
+            style.split(";").forEach(rule => {
+                const [key, value] = rule.split(":");
+                if (key && value) {
+                    jsonElement.style[key.trim()] = value.trim();
                 }
             });
-        } else {
-            // Otherwise, add attributes to the 'attributes' object
-            obj.attributes[attr.name] = attr.value;
         }
+
+        // Remove empty attributes and style objects
+        if (Object.keys(jsonElement.attributes).length === 0) {
+            delete jsonElement.attributes;
+        }
+
+        if (Object.keys(jsonElement.style).length === 0) {
+            delete jsonElement.style;
+        }
+
+        // If element has no attributes and style, return null (omit the element)
+        if (!jsonElement.attributes && !jsonElement.style) {
+            return null;
+        }
+
+        return jsonElement;
     }
 
-    return obj;
-}
+    // Function to recursively convert all SVG children
+    function convertSVG(svgElement) {
+        let jsonElements = [];
+        Array.from(svgElement.children).forEach(child => {
+            const jsonElement = convertToJSON(child);
+            if (jsonElement) {
+                jsonElements.push(jsonElement);
+            }
+        });
+        return jsonElements;
+    }
 
-function downloadJson(jsonData) {
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const jsonOutput = convertSVG(svgDoc.documentElement);
+
+    // Download the JSON as a file
+    const jsonBlob = new Blob([JSON.stringify(jsonOutput, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(jsonBlob);
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'svg.json';  // Automatically download the file as svg.json
-    document.body.appendChild(a);
+    a.download = "svg-converted.json";
     a.click();
-    document.body.removeChild(a);
-}
+});
