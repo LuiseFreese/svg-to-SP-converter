@@ -11,15 +11,15 @@ document.getElementById('convertBtn').addEventListener('click', function () {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(svgInput, 'image/svg+xml');
 
-    // Scale down the viewBox by 0.25
+    // Scale the viewBox by 75%
     const originalViewBox = xmlDoc.documentElement.getAttribute('viewBox');
     const viewBoxParts = originalViewBox.split(' ').map(Number);
 
     const scaledViewBox = [
         viewBoxParts[0], // min-x stays the same
         viewBoxParts[1], // min-y stays the same
-        viewBoxParts[2] * 0.25, // scale width
-        viewBoxParts[3] * 0.25  // scale height
+        viewBoxParts[2] * 0.75, // scale width by 75%
+        viewBoxParts[3] * 0.75  // scale height by 75%
     ].join(' ');
 
     // Set the new scaled viewBox
@@ -47,14 +47,14 @@ document.getElementById('convertBtn').addEventListener('click', function () {
         ]
     };
 
-    // Function to scale path coordinates by 0.25
+    // Function to scale path coordinates by 0.75
     function scalePath(d) {
-        return d.replace(/([MmLlHhVvCcSsQqTtAaZz])\s*([0-9\-\.]+)(?:\s*,\s*|\s+)([0-9\-\.]+)/g, function(match, command, x, y) {
-            return `${command} ${x * 0.25} ${y * 0.25}`;
+        return d.replace(/([0-9\.\-]+)/g, function (match) {
+            return (parseFloat(match) * 0.75).toString(); // Scale each number by 75%
         });
     }
 
-    // Process each <path> element and scale down by 0.25
+    // Process each <path> element and scale down by 75%
     paths.forEach(path => {
         const pathObj = {
             "elmType": "path",
