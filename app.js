@@ -1,53 +1,15 @@
-document.getElementById("convertBtn").addEventListener("click", function () {
-    const svgInput = document.getElementById("svgInput").value;
+document.getElementById('convertBtn').addEventListener('click', function () {
+    const svgInput = document.getElementById('svgInput').value;
+
+    // Create a new DOMParser to parse the SVG string
     const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(svgInput, "image/svg+xml");
+    const xmlDoc = parser.parseFromString(svgInput, 'image/svg+xml');
 
-    function convertToJSON(element) {
-        let jsonElement = {
-            elmType: element.tagName.toLowerCase(),
-            attributes: {},
-            style: {}
-        };
+    // Find all <path> elements in the SVG
+    const paths = xmlDoc.querySelectorAll('path');
 
-        Array.from(element.attributes).forEach(attr => {
-            jsonElement.attributes[attr.name] = attr.value;
-        });
-
-        const style = element.getAttribute("style");
-        if (style) {
-            style.split(";").forEach(rule => {
-                const [key, value] = rule.split(":");
-                if (key && value) {
-                    jsonElement.style[key.trim()] = value.trim();
-                }
-            });
-        }
-
-        if (Object.keys(jsonElement.attributes).length === 0) {
-            delete jsonElement.attributes;
-        }
-
-        if (Object.keys(jsonElement.style).length === 0) {
-            delete jsonElement.style;
-        }
-
-        return jsonElement;
-    }
-
-    function convertSVG(svgElement) {
-        let jsonElements = [];
-        Array.from(svgElement.children).forEach(child => {
-            const jsonElement = convertToJSON(child);
-            if (jsonElement.elmType === 'path') {  // Only keep 'path' elements
-                jsonElements.push(jsonElement);
-            }
-        });
-        return jsonElements;
-    }
-
-    // Start building the final JSON output
-    const finalJSON = {
+    // Build the JSON structure for SharePoint column formatting
+    const result = {
         "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
         "elmType": "div",
         "children": [
@@ -58,18 +20,32 @@ document.getElementById("convertBtn").addEventListener("click", function () {
             {
                 "elmType": "svg",
                 "attributes": {
-                    "viewBox": svgDoc.documentElement.getAttribute('viewBox')
+                    "viewBox": xmlDoc.documentElement.getAttribute("viewBox")
                 },
-                "children": convertSVG(svgDoc.documentElement) // Converted 'path' children
+                "children": []
             }
         ]
     };
 
-    // Create and download the JSON file
-    const jsonBlob = new Blob([JSON.stringify(finalJSON, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(jsonBlob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "svg-converted.json";
-    a.click();
+    // Process each <path> element and add it to the JSON structure
+    paths.forEach(path => {
+        const pathObj = {
+            "elmType": "path",
+            "attributes": {
+                "d": path.getAttribute('d')
+            },
+            "style": {
+                "fill": path.getAttribute('fill') || "#000000" // Default to black if no fill is provided
+            }
+        };
+        result.children[1].children.push(pathObj);
+    });
+
+    // Convert the result object to JSON and initiate the download
+    const jsonString = JSON.stringify(result, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'svg-to-sharepoint-json.json';
+    link.click();
 });
