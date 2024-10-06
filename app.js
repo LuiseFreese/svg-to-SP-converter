@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     "fill": path.getAttribute('fill') || "#000000" // Default to black if no fill is provided
                 }
             };
-            result.children[1].children.push(pathObj);
+            result.children[0].children.push(pathObj);
         });
 
         // Convert the result object to JSON and initiate the download
