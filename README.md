@@ -6,6 +6,8 @@ Select this image to watch a short video:
 
 [<img src="./assets/tn.jpg" width="50%">](https://www.youtube.com/watch?v=TLIQQY0sjB8 "SVG to JSON for SharePoint List Converter")
 
+Find the tool here: [SVG to JSON for SharePoint List Formatting tool](https://svgconverter.netlify.app/)
+
 ## Features Implemented
 
 ### SVG to JSON Conversion Logic
@@ -26,4 +28,4 @@ The tool detects SVG code that includes embedded PNG images via base64 encoding 
 
 ## Want to make a good thing even better?
 
-This is an open-source project and contributions are welcome! You are welcome to submit your PR or an issue. Ledt me know if you do have any questions, you can also [find me on LinkedIn](https://linkedin.com/in/luisefreese).
+This is an open-source project and contributions are welcome! You are welcome to submit your PR or an issue. Let me know if you do have any questions, you can also [find me on LinkedIn](https://linkedin.com/in/luisefreese).
