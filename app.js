@@ -1,15 +1,61 @@
-document.getElementById('convertBtn').addEventListener('click', function () {
-    const svgInput = document.getElementById('svgInput').value;
+// Select the textarea
+const svgInput = document.getElementById('svg-input');
+
+// Event listener for 'paste' to handle code pasting
+svgInput.addEventListener('paste', (event) => {
+    const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+    if (pastedText.includes('<svg')) {
+        svgInput.value = pastedText; // Populate the textarea with pasted SVG code
+    } else {
+        alert('Please paste valid SVG code.');
+    }
+});
+
+// Prevent default behavior for dragover and drop events
+svgInput.addEventListener('dragover', (event) => {
+    event.preventDefault(); // Necessary to allow dropping
+    svgInput.classList.add('dragover'); // Add a class to indicate drag state
+});
+
+svgInput.addEventListener('dragleave', () => {
+    svgInput.classList.remove('dragover'); // Remove class when not dragging over
+});
+
+svgInput.addEventListener('drop', (event) => {
+    event.preventDefault(); // Prevent default drop behavior (like opening the file in a new tab)
+    svgInput.classList.remove('dragover'); // Remove the class after the drop
+
+    // Get the file from the event
+    const file = event.dataTransfer.files[0];
+
+    // Only proceed if the dropped file is an SVG
+    if (file && file.type === 'image/svg+xml') {
+        const reader = new FileReader();
+
+        // Read the file as text
+        reader.onload = function(e) {
+            svgInput.value = e.target.result; // Set the textarea value to the SVG code
+        };
+
+        reader.readAsText(file); // Read the file as text
+    } else {
+        alert('Please drop a valid SVG file.');
+    }
+});
+
+// Convert button functionality
+function convertSvg() {
+    const svgInputValue = document.getElementById('svg-input').value;
 
     // Check if the SVG contains base64 encoded images
-    if (svgInput.includes('xlink:href="data:image/png;base64")) {
+    if (svgInputValue.includes('xlink:href="data:image/png;base64')) {
         alert('This tool does not support embedded images. Please remove the base64 encoded images from your SVG.');
         return; // Exit the function, preventing further execution
     }
 
     // Create a new DOMParser to parse the SVG string
     const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(svgInput, 'image/svg+xml');
+    const xmlDoc = parser.parseFromString(svgInputValue, 'image/svg+xml');
 
     // Find all <path> elements in the SVG
     const paths = xmlDoc.querySelectorAll('path');
@@ -26,7 +72,7 @@ document.getElementById('convertBtn').addEventListener('click', function () {
             {
                 "elmType": "svg",
                 "attributes": {
-                    "viewBox": xmlDoc.documentElement.getAttribute("viewBox") || "0 0 100 100" // Default viewBox if none
+                    "viewBox": xmlDoc.documentElement.getAttribute("viewBox")
                 },
                 "children": []
             }
@@ -56,5 +102,5 @@ document.getElementById('convertBtn').addEventListener('click', function () {
     link.click();
 
     // Clear the input field after processing
-    document.getElementById('svgInput').value = '';
-});
+    svgInput.value = '';
+}

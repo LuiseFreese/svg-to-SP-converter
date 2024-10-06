@@ -88,3 +88,8 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+
+.input-box.dragover {
+    border: 2px dashed #ff69b4;
+    background-color: #f0f8ff;
+}
