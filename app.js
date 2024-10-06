@@ -4,10 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     svgInput.addEventListener('dragover', (event) => {
         event.preventDefault(); // Prevent default to allow drop
+        svgInput.classList.add('dragover-active'); // Add the highlight class
+    });
+
+    svgInput.addEventListener('dragleave', () => {
+        svgInput.classList.remove('dragover-active'); // Remove highlight when drag leaves
     });
 
     svgInput.addEventListener('drop', (event) => {
         event.preventDefault(); // Prevent default to stop file from opening in a new tab
+        svgInput.classList.remove('dragover-active'); // Remove the highlight class on drop
 
         const files = event.dataTransfer.files;
         if (files.length > 0) {
