@@ -5,43 +5,44 @@ document.getElementById("convertBtn").addEventListener("click", function () {
 
     // Function to convert an SVG element to the desired JSON format
     function convertToJSON(element) {
-        let jsonElement = {
-            elmType: element.tagName.toLowerCase(),
-            attributes: {},
-            style: {}
-        };
+        // Only proceed if the element is of type 'path'
+        if (element.tagName.toLowerCase() === 'path') {
+            let jsonElement = {
+                elmType: "path",
+                attributes: {},
+                style: {}
+            };
 
-        // Add attributes if they exist
-        Array.from(element.attributes).forEach(attr => {
-            jsonElement.attributes[attr.name] = attr.value;
-        });
-
-        // Add styles if they exist
-        const style = element.getAttribute("style");
-        if (style) {
-            style.split(";").forEach(rule => {
-                const [key, value] = rule.split(":");
-                if (key && value) {
-                    jsonElement.style[key.trim()] = value.trim();
-                }
+            // Add attributes if they exist
+            Array.from(element.attributes).forEach(attr => {
+                jsonElement.attributes[attr.name] = attr.value;
             });
+
+            // Add styles if they exist
+            const style = element.getAttribute("style");
+            if (style) {
+                style.split(";").forEach(rule => {
+                    const [key, value] = rule.split(":");
+                    if (key && value) {
+                        jsonElement.style[key.trim()] = value.trim();
+                    }
+                });
+            }
+
+            // Remove empty attributes and style objects
+            if (Object.keys(jsonElement.attributes).length === 0) {
+                delete jsonElement.attributes;
+            }
+
+            if (Object.keys(jsonElement.style).length === 0) {
+                delete jsonElement.style;
+            }
+
+            return jsonElement;
         }
 
-        // Remove empty attributes and style objects
-        if (Object.keys(jsonElement.attributes).length === 0) {
-            delete jsonElement.attributes;
-        }
-
-        if (Object.keys(jsonElement.style).length === 0) {
-            delete jsonElement.style;
-        }
-
-        // If element has no attributes and style, return null (omit the element)
-        if (!jsonElement.attributes && !jsonElement.style) {
-            return null;
-        }
-
-        return jsonElement;
+        // If the element is not a 'path', we skip it
+        return null;
     }
 
     // Function to recursively convert all SVG children
