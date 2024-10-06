@@ -89,3 +89,15 @@ footer a:hover {
     text-decoration: underline;
 }
 
+.rotated-crown {
+    position: fixed;
+    top: 10px;  /* Adjust for desired margin */
+    right: 10px; /* Adjust for desired margin */
+    width: 100px;  /* Set size as per your needs */
+    height: auto;
+    transform: rotate(15deg);
+    opacity: 0.7; /* Optional, to make it blend subtly */
+    z-index: -1;  /* Ensure it doesn't overlap the actual content */
+}
+
+

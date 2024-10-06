@@ -4,44 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Convert SVGs for SharePoint List formatting</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="./assets/crown.png">
+    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="icon" href="./assets/crown.png" type="image/png">
 </head>
 
 <body>
-
     <div class="container">
-        <h1 class="title">SVG to JSON for SharePoint List Converter</h1>
-        <p class="description">This tool takes your raw SVG code and converts it into a JSON format that can be easily
-            used in SharePoint lists for custom column formatting. Just paste your SVG code, click the button, and
-            download the JSON file that's ready to paste into your SharePoint List.</p>
+        <header>
+            <h1>SVG to JSON for SharePoint List Converter</h1>
+        </header>
 
-        <div class="input-container">
-            <textarea id="svg-input" class="input-box" placeholder="Paste your SVG code here..."></textarea>
-            <button class="convert-button" onclick="convertSvg()">Convert and Download JSON</button>
+        <div class="explanation">
+            <p>
+                This tool takes your raw SVG code and converts it into a JSON format that can be easily used in
+                SharePoint lists for custom column formatting. Just paste your SVG code, click the button, and download
+                the JSON file that's ready to paste into your SharePoint List.
+            </p>
         </div>
+
+        <div class="input-section">
+            <textarea id="svgInput" placeholder="Paste your SVG code here"></textarea>
+        </div>
+
+        <div class="button-section">
+            <button id="convertButton">Convert to JSON</button>
+        </div>
+
+        <footer>
+            <p>Made with 💖 by <a href="https://m365princess.com" target="_blank">Luise Freese</a> - 2024 | <a
+                    href="https://github.com/LuiseFreese/svg-to-SP-converter" target="_blank"><img
+                        src="./assets/github-mark.png" alt="GitHub" class="github-icon">Link to Code</a></p>
+        </footer>
     </div>
 
-    <footer>
-        <p>
-            Made with 💖 by
-            <a href="https://m365princess.com" target="_blank">Luise Freese</a> - 2024 |
-            <a href="https://github.com/LuiseFreese/svg-to-SP-converter" target="_blank">
-                <img src="./assets/github-mark.png" alt="GitHub Octocat"
-                    style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                Link to Code
-            </a>
-        </p>
-    </footer>
-
-    <!-- BuyMeACoffee Widget -->
+    <!-- Buy Me a Coffee widget -->
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
         data-id="LuiseFreese" data-description="Support me on Buy me a coffee!"
-        data-message="Thanks for using this tool - would you like to get me a coffee (or some Lego) 💖?"
-        data-color="#ff69b4" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+        data-message="Thanks for using this service - would you like to get me a coffee (or some Lego)?"
+        data-color="#BD5FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
-    <script src="app.js"></script>
+    <!-- Rotated Crown Image -->
+    <img src="./assets/crown.png" alt="Crown Image" class="rotated-crown">
+
+    <script src="./assets/app.js"></script>
 </body>
 
 </html>
