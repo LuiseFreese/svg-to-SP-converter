@@ -4,34 +4,29 @@ document.getElementById('convertBtn').addEventListener('click', function () {
     // Check if the SVG contains base64 encoded images
     if (svgInput.includes('xlink:href="data:image/png;base64')) {
         alert('This tool does not support embedded images. Please remove the base64 encoded images from your SVG.');
-        return; // Exit the function, preventing further execution
+        return;
     }
 
     // Create a new DOMParser to parse the SVG string
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(svgInput, 'image/svg+xml');
 
+    // Scale down the viewBox by 0.25
+    const originalViewBox = xmlDoc.documentElement.getAttribute('viewBox');
+    const viewBoxParts = originalViewBox.split(' ').map(Number);
+
+    const scaledViewBox = [
+        viewBoxParts[0], // min-x stays the same
+        viewBoxParts[1], // min-y stays the same
+        viewBoxParts[2] * 0.25, // scale width
+        viewBoxParts[3] * 0.25  // scale height
+    ].join(' ');
+
+    // Set the new scaled viewBox
+    xmlDoc.documentElement.setAttribute('viewBox', scaledViewBox);
+
     // Find all <path> elements in the SVG
     const paths = xmlDoc.querySelectorAll('path');
-
-    // Get the viewBox and scale it down by 25%
-    let viewBox = xmlDoc.documentElement.getAttribute("viewBox");
-    if (viewBox) {
-        let viewBoxValues = viewBox.split(' ').map(Number);
-        // Scale the width and height by 25%
-        viewBoxValues = viewBoxValues.map((val, index) => (index >= 2 ? val * 0.75 : val));
-        viewBox = viewBoxValues.join(' ');
-    }
-
-    // Scale each path's "d" attribute by 25%
-    const scaleFactor = 0.75;
-
-    function scalePathData(pathData) {
-        // Regular expression to match numbers in the path data
-        return pathData.replace(/-?\d*\.?\d+/g, function (num) {
-            return parseFloat(num) * scaleFactor;
-        });
-    }
 
     // Build the JSON structure for SharePoint column formatting
     const result = {
@@ -45,20 +40,26 @@ document.getElementById('convertBtn').addEventListener('click', function () {
             {
                 "elmType": "svg",
                 "attributes": {
-                    "viewBox": viewBox
+                    "viewBox": scaledViewBox // Use the scaled viewBox here
                 },
                 "children": []
             }
         ]
     };
 
-    // Process each <path> element and add it to the JSON structure
+    // Function to scale path coordinates by 0.25
+    function scalePath(d) {
+        return d.replace(/([MmLlHhVvCcSsQqTtAaZz])\s*([0-9\-\.]+)(?:\s*,\s*|\s+)([0-9\-\.]+)/g, function(match, command, x, y) {
+            return `${command} ${x * 0.25} ${y * 0.25}`;
+        });
+    }
+
+    // Process each <path> element and scale down by 0.25
     paths.forEach(path => {
-        const scaledPathData = scalePathData(path.getAttribute('d'));
         const pathObj = {
             "elmType": "path",
             "attributes": {
-                "d": scaledPathData
+                "d": scalePath(path.getAttribute('d')) // Scale down the path
             },
             "style": {
                 "fill": path.getAttribute('fill') || "#000000" // Default to black if no fill is provided
