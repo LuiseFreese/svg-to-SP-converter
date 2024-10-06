@@ -11,19 +11,27 @@ svgInput.addEventListener('paste', (event) => {
     }
 });
 
-// Prevent default behavior for dragover and drop events
+// Prevent default behavior for dragover and drop events on the entire window
+window.addEventListener('dragover', (event) => {
+    event.preventDefault();
+});
+
+window.addEventListener('drop', (event) => {
+    event.preventDefault();
+});
+
+// Prevent default behavior for dragover and drop events on the textarea
 svgInput.addEventListener('dragover', (event) => {
     event.preventDefault(); // Necessary to allow dropping
-    svgInput.classList.add('dragover'); // Add a class to indicate drag state
+    svgInput.classList.add('dragover'); // Optional: Add a class to indicate drag state
 });
 
 svgInput.addEventListener('dragleave', () => {
-    svgInput.classList.remove('dragover'); // Remove class when not dragging over
+    svgInput.classList.remove('dragover'); // Optional: Remove class when not dragging over
 });
 
 svgInput.addEventListener('drop', (event) => {
-    event.preventDefault(); // Prevent default drop behavior (like opening the file in a new tab)
-    svgInput.classList.remove('dragover'); // Remove the class after the drop
+    event.preventDefault(); // Prevent default behavior (like opening the file in a new tab)
 
     // Get the file from the event
     const file = event.dataTransfer.files[0];
