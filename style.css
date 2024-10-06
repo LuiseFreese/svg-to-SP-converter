@@ -67,10 +67,17 @@ body {
 /* Footer styles */
 footer {
     text-align: center;
-    background-color: #fff;
-    padding: 20px;
+    position: fixed;
+    bottom: 0;
     width: 100%;
-    margin-top: auto; /* Ensures the footer is pushed to the bottom */
+    padding: 10px 0;
+    background-color: #f1f1f1;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
 }
 
 footer a {
@@ -82,13 +89,3 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Navbar styling */
-.navbar {
-    background-color: #ff69b4;
-    padding: 10px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
