@@ -1,6 +1,12 @@
 document.getElementById('convertBtn').addEventListener('click', function () {
     const svgInput = document.getElementById('svgInput').value;
 
+    // Check if the SVG contains base64 encoded images
+    if (svgInput.includes('xlink:href="data:image/png;base64')) {
+        alert('This tool does not support embedded images. Please remove the base64 encoded images from your SVG.');
+        return; // Exit the function, preventing further execution
+    }
+
     // Create a new DOMParser to parse the SVG string
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(svgInput, 'image/svg+xml');
@@ -48,4 +54,7 @@ document.getElementById('convertBtn').addEventListener('click', function () {
     link.href = URL.createObjectURL(blob);
     link.download = 'svg-to-sharepoint-json.json';
     link.click();
+
+    // Clear the input field after processing
+    document.getElementById('svgInput').value = '';
 });
