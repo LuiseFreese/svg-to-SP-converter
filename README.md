@@ -2,7 +2,7 @@
 
 The purpose of this project is to create a web-based tool that allows users to convert SVG code into a JSON format specifically designed for custom column formatting in SharePoint lists. The tool is built using HTML, CSS, and JavaScript, and is hosted on Netlify.
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/eIQPcEvMFJ8RE/0.jpg)](https://www.youtube.com/watch?v=eIQPcEvMFJ8)
+[![Short explainer video](https://img.youtube.com/vi/eIQPcEvMFJ8RE/0.jpg)](https://www.youtube.com/watch?v=eIQPcEvMFJ8)
 
 ## Features Implemented
 
