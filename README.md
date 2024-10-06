@@ -1,5 +1,7 @@
 # Project Overview: SVG to JSON for SharePoint List Formatting
 
+[![Visitors](https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fgithub.com%2FLuiseFreese%2Fsvg-to-SP-converter&label=awesome%20visitors&countColor=%23ff69b4&style=plastic)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FLuiseFreese%2Fsvg-to-SP-converter)
+
 The purpose of this project is to create a web-based tool that allows users to convert SVG code into a JSON format specifically designed for custom column formatting in SharePoint lists. The tool is built using HTML, CSS, and JavaScript, and is hosted on Netlify.
 
 Select this image to watch a short video:
