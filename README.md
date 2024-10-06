@@ -4,7 +4,7 @@ The purpose of this project is to create a web-based tool that allows users to c
 
 Select this image to watch a short video:
 
-[<img src="./assets/tn.jpg" width="50%">](https://www.youtube.com/watch?v=eIQPcEvMFJ8 "SVG to JSON for SharePoint List Converter")
+[<img src="./assets/tn.jpg" width="50%">](https://www.youtube.com/watch?v=TLIQQY0sjB8 "SVG to JSON for SharePoint List Converter")
 
 ## Features Implemented
 
