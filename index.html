@@ -3,28 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVG to JSON for SharePoint List Converter</title>
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&display=swap" rel="stylesheet">
+    <title>SVG to JSON for SharePoint List converter</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="title">SVG to JSON for SharePoint List Converter</div>
-        
-        <div class="info-section">
-            <div class="info-title">What does this tool do?</div>
-            <div class="info-text">
-                This tool takes your raw SVG code and converts it into a JSON format that can be easily used in SharePoint lists for custom formatting. Just paste your SVG code, click the button, and download the JSON file that's ready to use.
-            </div>
+        <h1>SVG to JSON for SharePoint List converter</h1>
+        <p class="description">
+            This tool takes your raw SVG code and converts it into a JSON format that can be easily used in SharePoint lists for custom column formatting. Just paste your SVG code, click the button, and download the JSON file that's ready to paste into your SharePoint List.
+        </p>
+        <div class="input-container">
+            <textarea id="svgInput" placeholder="Paste your SVG code here"></textarea>
+            <button id="convertBtn">Convert and Download JSON</button>
         </div>
-
-        <textarea id="svgInput" placeholder="Paste your SVG code here"></textarea>
-        
-        <button id="convertBtn">Convert & Download JSON</button>
-
-        <footer>Made with 💖 by <a href="https://m365princess.com" target="_blank">Luise Freese</a> - 2024</footer>
     </div>
-
+    <footer>
+        Made with 💖 by <a href="https://m365princess.com" target="_blank">Luise Freese</a> - 2024
+    </footer>
     <script src="app.js"></script>
 </body>
 </html>
