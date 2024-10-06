@@ -13,20 +13,34 @@ document.getElementById('convertBtn').addEventListener('click', () => {
 function convertSvgToJson(svg) {
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(svg, 'image/svg+xml');
-    return svgElementToJson(svgDoc.documentElement);
+    const elementsArray = Array.from(svgDoc.documentElement.children).map(svgElementToJson);
+    return elementsArray; // Return the array of elements
 }
 
 function svgElementToJson(element) {
     const obj = {
-        name: element.nodeName,
-        attributes: {}
+        elmType: element.nodeName,  // Set the element type (e.g., "path", "rect")
+        attributes: {},
+        style: {}
     };
 
+    // Extract attributes into the 'attributes' property
     for (let attr of element.attributes) {
-        obj.attributes[attr.name] = attr.value;
+        if (attr.name === 'style') {
+            // If the element has inline styles, extract those into the 'style' object
+            const styleRules = attr.value.split(';');
+            styleRules.forEach(rule => {
+                const [property, value] = rule.split(':');
+                if (property && value) {
+                    obj.style[property.trim()] = value.trim();
+                }
+            });
+        } else {
+            // Otherwise, add attributes to the 'attributes' object
+            obj.attributes[attr.name] = attr.value;
+        }
     }
 
-    obj.children = Array.from(element.children).map(svgElementToJson);
     return obj;
 }
 
