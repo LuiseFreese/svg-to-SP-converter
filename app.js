@@ -14,6 +14,26 @@ document.getElementById('convertBtn').addEventListener('click', function () {
     // Find all <path> elements in the SVG
     const paths = xmlDoc.querySelectorAll('path');
 
+    // Check if the SVG already has a viewBox attribute
+    let viewBox = xmlDoc.documentElement.getAttribute("viewBox");
+    
+    if (!viewBox) {
+        // Calculate the viewBox if it's missing
+        const svgElement = xmlDoc.documentElement;
+        const svgNamespace = "http://www.w3.org/2000/svg";
+        const tempSvg = document.createElementNS(svgNamespace, "svg");
+
+        paths.forEach(path => {
+            tempSvg.appendChild(path.cloneNode(true));
+        });
+
+        document.body.appendChild(tempSvg);
+        const bbox = tempSvg.getBBox();
+        document.body.removeChild(tempSvg);
+
+        viewBox = `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`;
+    }
+
     // Build the JSON structure for SharePoint column formatting
     const result = {
         "$schema": "https://developer.microsoft.com/json-schemas/sp/v2/column-formatting.schema.json",
@@ -26,7 +46,7 @@ document.getElementById('convertBtn').addEventListener('click', function () {
             {
                 "elmType": "svg",
                 "attributes": {
-                    "viewBox": xmlDoc.documentElement.getAttribute("viewBox")
+                    "viewBox": viewBox
                 },
                 "children": []
             }
