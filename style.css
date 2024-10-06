@@ -1,139 +1,85 @@
-/* Styling for Sidebar Navigation */
-.sidebar {
-    height: 100%;
-    width: 250px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #ff69b4;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar h2 {
-    text-align: center;
-    color: #fff;
-    font-size: 24px;
-}
-
-.menu {
-    list-style-type: none;
-    padding: 0;
-}
-
-.menu li {
-    padding: 15px 10px;
-    text-align: center;
-    font-size: 18px;
-}
-
-.menu li a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    display: block;
-    transition: background-color 0.3s ease;
-}
-
-.menu li a:hover {
-    background-color: #fff200;
-    color: #ff69b4;
-}
-
-/* Main content styling */
-.main-content {
-    margin-left: 260px; /* Margin to avoid overlap with sidebar */
-    padding: 30px;
-    font-size: 18px;
-}
-
-.main-content h1 {
-    color: #ff69b4;
-    font-size: 36px;
-    margin-bottom: 20px;
-}
-
-.main-content p {
-    font-size: 18px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-/* Input Field and Button Adjustments */
-textarea {
-    width: 100%;
-    height: 200px; /* Adjusted to make the input box larger */
-    padding: 10px;
-    margin-bottom: 20px; /* Increased spacing between input and button */
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-button {
-    padding: 15px 25px;
-    background-color: #ff69b4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #fff200;
-    color: #ff69b4;
-}
-
-/* Footer Styling */
-footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: #ff69b4;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 16px;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
-}
-
-footer a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-footer a:hover {
-    color: #fff200;
-}
-
-/* Basic layout and reset */
-body {
-    font-family: Arial, sans-serif;
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Make sure the sidebar and content scroll properly */
-html, body {
-    height: 100%;
-}
-
-.main-content {
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
     min-height: 100vh;
-    overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Ensure the sidebar scrolls if needed */
-.sidebar {
-    overflow-y: auto;
+.container {
+    text-align: center;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    border-radius: 10px;
+    flex-grow: 1;
+}
+
+.title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    margin-bottom: 30px;
+}
+
+.input-box {
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.convert-button {
+    background-color: #ff69b4;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.convert-button:hover {
+    background-color: #e655a0;
+}
+
+/* Footer styles */
+footer {
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    width: 100%;
+    margin-top: auto; /* Ensures the footer is pushed to the bottom */
+}
+
+footer a {
+    color: #ff69b4;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
 
 /* Navbar styling */
@@ -146,40 +92,3 @@ html, body {
     top: 0;
     z-index: 1000;
 }
-
-.menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: flex-start;
-    gap: 20px;
-}
-
-.menu li {
-    display: inline;
-}
-
-.menu a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: color 0.3s ease;
-}
-
-.menu a:hover {
-    color: #fff200; /* Change hover color */
-}
-
-/* Add padding for content to avoid overlap with the fixed navbar */
-body {
-    padding-top: 60px;
-}
-
-/* Optional: Section styling */
-section {
-    padding: 60px;
-    margin-top: 20px;
-}
-
