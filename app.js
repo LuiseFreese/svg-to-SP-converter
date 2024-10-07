@@ -1,72 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const svgInput = document.getElementById('svgInput');
-    const convertBtn = document.getElementById('convertBtn');
-    const successMessage = document.getElementById('successMessage');
+    const convertBtnDownload = document.getElementById('convertBtnDownload'); // Target for download button
+    const convertBtnClipboard = document.getElementById('convertBtnClipboard'); // Target for clipboard button
+    const toastNotification = document.getElementById('toastNotification');
 
-    // Handle Drag and Drop events
-    svgInput.addEventListener('dragover', (event) => {
-        event.preventDefault(); // Prevent default to allow drop
-        svgInput.classList.add('dragover-active'); // Add the highlight class
-    });
-
-    svgInput.addEventListener('dragleave', () => {
-        svgInput.classList.remove('dragover-active'); // Remove highlight when drag leaves
-    });
-
-    svgInput.addEventListener('drop', (event) => {
-        event.preventDefault(); // Prevent default to stop file from opening in a new tab
-        svgInput.classList.remove('dragover-active'); // Remove the highlight class on drop
-
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type !== 'image/svg+xml') {
-                showError('Only SVG files are allowed.');
-                return;
-            }
-
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                const content = e.target.result;
-                if (content.includes('xlink:href="data:image/png;base64')) {
-                    showError('Embedded images (PNG) are not allowed in SVG.');
-                    return;
-                }
-                svgInput.value = content; // Set the content to the textarea
-            };
-
-            reader.readAsText(file);
-        }
-    });
-
-    convertBtn.addEventListener('click', () => {
-        const content = svgInput.value;
-        if (!content.startsWith('<svg')) {
-            showError('The input is not valid SVG code.');
-            return;
-        }
-
-        if (content.includes('xlink:href="data:image/png;base64')) {
-            showError('Embedded images (PNG) are not allowed in SVG.');
-            return;
-        }
-
-        try {
-            const jsonOutput = processSVGContent(content);
-
-            // Copy the JSON to clipboard
-            const jsonString = JSON.stringify(jsonOutput, null, 2);
-            navigator.clipboard.writeText(jsonString).then(() => {
-                showSuccessMessage(); // Show the toast notification on successful clipboard copy
-            }).catch((err) => {
-                showError('Failed to copy to clipboard.'); // Handle copy failure
-            });
-        } catch (error) {
-            showError('Failed to process the SVG content.');
-        }
-    });
-
+    // Common function to process SVG content and return the result JSON object
     function processSVGContent(content) {
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(content, 'image/svg+xml');
@@ -104,27 +42,81 @@ document.addEventListener('DOMContentLoaded', () => {
             result.children[1].children.push(pathObj);
         });
 
-        return result; // Return the generated JSON
+        return result;
     }
 
-    // Show success toast
-    function showSuccessMessage() {
-        successMessage.style.display = 'block';
-        successMessage.classList.add('show');
-        setTimeout(() => {
-            successMessage.classList.remove('show');
-            successMessage.style.display = 'none';
-        }, 2000); // Disappear after 2 seconds
-    }
+    // Handle Convert and Download JSON
+    convertBtnDownload.addEventListener('click', () => {
+        const content = svgInput.value;
 
-    // Show error toast
-    function showError(message) {
-        successMessage.textContent = message;
-        successMessage.style.backgroundColor = 'red'; // Show as red for errors
-        showSuccessMessage(); // Use the same function for displaying error
-        setTimeout(() => {
-            successMessage.style.backgroundColor = '#ff69b4'; // Reset to pink after
-            successMessage.textContent = 'Copied to clipboard!';
-        }, 2000);
-    }
+        if (!content.includes('<svg')) {
+            alert('Please enter a valid SVG.');
+            return;
+        }
+
+        const result = processSVGContent(content);
+
+        // Convert the result object to JSON and initiate the download
+        const jsonString = JSON.stringify(result, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'svg-to-sharepoint-json.json';
+        link.click();
+
+        svgInput.value = ''; // Clear input after downloading
+    });
+
+    // Handle Convert and Copy to Clipboard
+    convertBtnClipboard.addEventListener('click', () => {
+        const content = svgInput.value;
+
+        if (!content.includes('<svg')) {
+            alert('Please enter a valid SVG.');
+            return;
+        }
+
+        const result = processSVGContent(content);
+
+        const jsonString = JSON.stringify(result, null, 2);
+
+        // Copy the JSON to the clipboard
+        navigator.clipboard.writeText(jsonString).then(() => {
+            // Show success notification
+            toastNotification.textContent = 'Copied to clipboard!';
+            toastNotification.classList.add('show-toast');
+
+            // Hide the notification after 2 seconds
+            setTimeout(() => {
+                toastNotification.classList.remove('show-toast');
+            }, 2000);
+        });
+    });
+
+    // Drag and Drop Handling
+    svgInput.addEventListener('dragover', (event) => {
+        event.preventDefault(); // Prevent default to allow drop
+        svgInput.classList.add('dragover-active'); // Add the highlight class
+    });
+
+    svgInput.addEventListener('dragleave', () => {
+        svgInput.classList.remove('dragover-active'); // Remove highlight when drag leaves
+    });
+
+    svgInput.addEventListener('drop', (event) => {
+        event.preventDefault(); // Prevent default to stop file from opening in a new tab
+        svgInput.classList.remove('dragover-active'); // Remove the highlight class on drop
+
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                svgInput.value = e.target.result; // Set the content to the textarea
+            };
+
+            reader.readAsText(file);
+        }
+    });
 });
