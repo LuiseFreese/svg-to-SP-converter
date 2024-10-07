@@ -110,3 +110,46 @@ footer a:hover {
     background-color: #fff0f5; /* Light pink background */
 }
 
+/* Success toast notification */
+#successMessage {
+    position: fixed;
+    top: -50px; /* Initially off the screen */
+    right: 20px;
+    background-color: #ff69b4;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    z-index: 1000;
+    opacity: 0; /* Initially hidden */
+    transition: all 0.3s ease-in-out; /* Animation for fade in/out */
+}
+
+#successMessage.show {
+    top: 20px; /* Moves the toast into view */
+    opacity: 1; /* Makes it visible */
+}
+
+.success-toast {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ff69b4;
+    color: white;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-20px);
+}
+
+.success-toast.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+

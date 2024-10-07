@@ -1,38 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const svgInput = document.getElementById('svgInput');
-    const convertBtn = document.getElementById('convertBtn');
+    const convertBtnDownload = document.getElementById('convertBtnDownload'); // Target for download button
+    const convertBtnClipboard = document.getElementById('convertBtnClipboard'); // Target for clipboard button
+    const toastNotification = document.getElementById('toastNotification');
 
-    svgInput.addEventListener('dragover', (event) => {
-        event.preventDefault(); // Prevent default to allow drop
-        svgInput.classList.add('dragover-active'); // Add the highlight class
-    });
-
-    svgInput.addEventListener('dragleave', () => {
-        svgInput.classList.remove('dragover-active'); // Remove highlight when drag leaves
-    });
-
-    svgInput.addEventListener('drop', (event) => {
-        event.preventDefault(); // Prevent default to stop file from opening in a new tab
-        svgInput.classList.remove('dragover-active'); // Remove the highlight class on drop
-
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-            const file = files[0];
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                svgInput.value = e.target.result; // Set the content to the textarea
-            };
-
-            reader.readAsText(file);
-        }
-    });
-
-    convertBtn.addEventListener('click', () => {
-        const content = svgInput.value;
-        processSVGContent(content);
-    });
-
+    // Common function to process SVG content and return the result JSON object
     function processSVGContent(content) {
         const parser = new DOMParser();
         const svgDoc = parser.parseFromString(content, 'image/svg+xml');
@@ -70,6 +42,20 @@ document.addEventListener('DOMContentLoaded', () => {
             result.children[1].children.push(pathObj);
         });
 
+        return result;
+    }
+
+    // Handle Convert and Download JSON
+    convertBtnDownload.addEventListener('click', () => {
+        const content = svgInput.value;
+
+        if (!content.includes('<svg')) {
+            alert('Please enter a valid SVG.');
+            return;
+        }
+
+        const result = processSVGContent(content);
+
         // Convert the result object to JSON and initiate the download
         const jsonString = JSON.stringify(result, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -78,7 +64,59 @@ document.addEventListener('DOMContentLoaded', () => {
         link.download = 'svg-to-sharepoint-json.json';
         link.click();
 
-        // Clear the input field after processing
-        svgInput.value = '';
-    }
+        svgInput.value = ''; // Clear input after downloading
+    });
+
+    // Handle Convert and Copy to Clipboard
+    convertBtnClipboard.addEventListener('click', () => {
+        const content = svgInput.value;
+
+        if (!content.includes('<svg')) {
+            alert('Please enter a valid SVG.');
+            return;
+        }
+
+        const result = processSVGContent(content);
+
+        const jsonString = JSON.stringify(result, null, 2);
+
+        // Copy the JSON to the clipboard
+        navigator.clipboard.writeText(jsonString).then(() => {
+            // Show success notification
+            toastNotification.textContent = 'Copied to clipboard!';
+            toastNotification.classList.add('show-toast');
+
+            // Hide the notification after 2 seconds
+            setTimeout(() => {
+                toastNotification.classList.remove('show-toast');
+            }, 2000);
+        });
+    });
+
+    // Drag and Drop Handling
+    svgInput.addEventListener('dragover', (event) => {
+        event.preventDefault(); // Prevent default to allow drop
+        svgInput.classList.add('dragover-active'); // Add the highlight class
+    });
+
+    svgInput.addEventListener('dragleave', () => {
+        svgInput.classList.remove('dragover-active'); // Remove highlight when drag leaves
+    });
+
+    svgInput.addEventListener('drop', (event) => {
+        event.preventDefault(); // Prevent default to stop file from opening in a new tab
+        svgInput.classList.remove('dragover-active'); // Remove the highlight class on drop
+
+        const files = event.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                svgInput.value = e.target.result; // Set the content to the textarea
+            };
+
+            reader.readAsText(file);
+        }
+    });
 });
