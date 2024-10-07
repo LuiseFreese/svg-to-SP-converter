@@ -11,16 +11,22 @@
 
 <body>
 
+    <!-- Toast Notification -->
+    <div id="successMessage" class="toast">Copied to clipboard!</div>
+
     <div class="container">
-        <h1 class="title">SVG to JSON Converter for SharePoint Lists</h1>
-        <p class="description">This tool takes your raw SVG code and converts it into a JSON format that can be
-            easily
-            used in SharePoint Lists for custom column formatting. </p>
+        <h1 class="title">SVG to JSON for SharePoint List Converter</h1>
+        <p class="description">
+            This tool takes your raw SVG code and converts it into a JSON format that can be easily used in SharePoint
+            Lists for custom column formatting. You can either download the the json file or have it copied to your
+            clipboard.
+        </p>
 
         <div class="input-container">
             <textarea id="svgInput" class="input-box"
                 placeholder="Drag'n drop your SVG or paste your SVG code here..."></textarea>
-            <button id="convertBtn" class="convert-button">Convert and download JSON</button> <!-- ID corrected -->
+            <button id="convertBtnDownload" class="convert-button">Convert and Download JSON</button>
+            <button id="convertBtnClipboard" class="convert-button">Convert and Copy to Clipboard</button>
         </div>
     </div>
 
@@ -42,6 +48,7 @@
         data-message="Thanks for using this tool - would you like to get me a coffee (or some Lego) 💖?"
         data-color="#ff69b4" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
+    <!-- JavaScript for app functionality -->
     <script src="app.js"></script>
 </body>
 

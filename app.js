@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const svgInput = document.getElementById('svgInput');
     const convertBtn = document.getElementById('convertBtn');
+    const successMessage = document.getElementById('successMessage');
 
+    // Handle Drag and Drop events
     svgInput.addEventListener('dragover', (event) => {
         event.preventDefault(); // Prevent default to allow drop
         svgInput.classList.add('dragover-active'); // Add the highlight class
@@ -18,10 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const files = event.dataTransfer.files;
         if (files.length > 0) {
             const file = files[0];
+            if (file.type !== 'image/svg+xml') {
+                showError('Only SVG files are allowed.');
+                return;
+            }
+
             const reader = new FileReader();
 
             reader.onload = (e) => {
-                svgInput.value = e.target.result; // Set the content to the textarea
+                const content = e.target.result;
+                if (content.includes('xlink:href="data:image/png;base64')) {
+                    showError('Embedded images (PNG) are not allowed in SVG.');
+                    return;
+                }
+                svgInput.value = content; // Set the content to the textarea
             };
 
             reader.readAsText(file);
@@ -30,7 +42,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     convertBtn.addEventListener('click', () => {
         const content = svgInput.value;
-        processSVGContent(content);
+        if (!content.startsWith('<svg')) {
+            showError('The input is not valid SVG code.');
+            return;
+        }
+
+        if (content.includes('xlink:href="data:image/png;base64')) {
+            showError('Embedded images (PNG) are not allowed in SVG.');
+            return;
+        }
+
+        try {
+            const jsonOutput = processSVGContent(content);
+
+            // Copy the JSON to clipboard
+            const jsonString = JSON.stringify(jsonOutput, null, 2);
+            navigator.clipboard.writeText(jsonString).then(() => {
+                showSuccessMessage(); // Show the toast notification on successful clipboard copy
+            }).catch((err) => {
+                showError('Failed to copy to clipboard.'); // Handle copy failure
+            });
+        } catch (error) {
+            showError('Failed to process the SVG content.');
+        }
     });
 
     function processSVGContent(content) {
@@ -70,15 +104,27 @@ document.addEventListener('DOMContentLoaded', () => {
             result.children[1].children.push(pathObj);
         });
 
-        // Convert the result object to JSON and initiate the download
-        const jsonString = JSON.stringify(result, null, 2);
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'svg-to-sharepoint-json.json';
-        link.click();
+        return result; // Return the generated JSON
+    }
 
-        // Clear the input field after processing
-        svgInput.value = '';
+    // Show success toast
+    function showSuccessMessage() {
+        successMessage.style.display = 'block';
+        successMessage.classList.add('show');
+        setTimeout(() => {
+            successMessage.classList.remove('show');
+            successMessage.style.display = 'none';
+        }, 2000); // Disappear after 2 seconds
+    }
+
+    // Show error toast
+    function showError(message) {
+        successMessage.textContent = message;
+        successMessage.style.backgroundColor = 'red'; // Show as red for errors
+        showSuccessMessage(); // Use the same function for displaying error
+        setTimeout(() => {
+            successMessage.style.backgroundColor = '#ff69b4'; // Reset to pink after
+            successMessage.textContent = 'Copied to clipboard!';
+        }, 2000);
     }
 });
