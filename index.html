@@ -1,34 +1,25 @@
-<!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convert SVGs for SharePoint List formatting</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="./assets/crown.png">
+<head></head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Convert SVGs for SharePoint List formatting</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="./assets/crown.png">
 </head>
 
 <body>
 
-    <!-- Toast Notification -->
-    <div id="successMessage" class="toast">Copied to clipboard!</div>
-
     <div class="container">
         <h1 class="title">SVG to JSON for SharePoint List Converter</h1>
-        <p class="description">
-            This tool takes your raw SVG code and converts it into a JSON format that can be easily used in SharePoint
-            Lists for custom column formatting. You can either download the the json file or have it copied to your
-            clipboard.
-        </p>
+        <p class="description">This tool takes your raw SVG code and converts it into a JSON format that can be easily
+            used in SharePoint lists for custom column formatting. Just paste your SVG code, or drag'n'drop your SVG
+            file and click the button, and
+            download the JSON file that's ready to paste into your SharePoint List.</p>
 
         <div class="input-container">
-            <textarea id="svgInput" class="input-box"
-                placeholder="Drag'n drop your SVG or paste your SVG code here..."></textarea>
-            <button id="convertBtnDownload" class="convert-button">Convert and Download JSON</button>
-            <button id="convertBtnClipboard" class="convert-button">Convert and Copy to Clipboard</button>
-
-
+            <textarea id="svgInput" class="input-box" placeholder="Paste your SVG code here..."></textarea>
+            <button id="convertBtn" class="convert-button">Convert and Download JSON</button> <!-- ID corrected -->
         </div>
     </div>
 
@@ -39,19 +30,19 @@
             <a href="https://github.com/LuiseFreese/svg-to-SP-converter" target="_blank">
                 <img src="./assets/github-mark.png" alt="GitHub Octocat"
                     style="width: 16px; height: 16px; vertical-align: middle; margin-right: 5px;">
-                Link to Code - it;s opensource!
+                Link to Code
             </a>
         </p>
     </footer>
 
-    <!-- BuyMeACoffee Widget -->
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
         data-id="LuiseFreese" data-description="Support me on Buy me a coffee!"
         data-message="Thanks for using this tool - would you like to get me a coffee (or some Lego) 💖?"
-        data-color="#ff69b4" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+        data-color="#FF69B4" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
-    <!-- JavaScript for app functionality -->
     <script src="app.js"></script>
+
+
 </body>
 
 </html>
